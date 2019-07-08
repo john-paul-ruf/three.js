@@ -6,11 +6,11 @@ var paddleModel = function (origin) {
 paddleModel.prototype = function () {
 
   var init = function (game) {
-    var outerGeometry = new THREE.BoxGeometry(game.config.paddleWidth + 1, game.config.paddleHeight + 1, 0);
+    var outerGeometry = new THREE.PlaneGeometry(game.config.paddleWidth, game.config.paddleHeight);
     var outerMaterial = new THREE.MeshBasicMaterial({ color: game.config.paddleColorOuter });
     var outerCube = new THREE.Mesh(outerGeometry, outerMaterial);
 
-    var geometry = new THREE.BoxGeometry(game.config.paddleWidth, game.config.paddleHeight, 0);
+    var geometry = new THREE.PlaneGeometry(game.config.paddleWidth - 1, game.config.paddleHeight - 1);
     var material = new THREE.MeshBasicMaterial({ color: game.config.paddleColorInner });
     var cube = new THREE.Mesh(geometry, material);
 

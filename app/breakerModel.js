@@ -9,16 +9,24 @@ breakerModel.prototype = function () {
   var logHit = function () {
     this.blockReady = false;
     this.paddleReady = false;
-    setTimeout(() => { this.blockReady = true; }, 10);
-    setTimeout(() => { this.paddleReady = true; }, 1000);
+
+
+    this.blockTimer = setTimeout(() => {
+    this.blockReady = true;
+      clearTimeout(this.blockTimer);
+    }, 10);
+    this.paddelTimer = setTimeout(() => {
+    this.paddleReady = true;
+      clearTimeout(this.paddelTimer);
+    }, 50);
   }
 
   var init = function (game) {
-    var outerGeometry = new THREE.BoxGeometry(game.config.breakerWidth + 1, game.config.breakerHeight + 1, 0);
+    var outerGeometry = new THREE.PlaneGeometry(game.config.breakerWidth, game.config.breakerHeight);
     var outerMaterial = new THREE.MeshBasicMaterial({ color: game.config.breakerColorOuter });
     var outerCube = new THREE.Mesh(outerGeometry, outerMaterial);
 
-    var geometry = new THREE.BoxGeometry(game.config.breakerWidth, game.config.breakerHeight, 0);
+    var geometry = new THREE.PlaneGeometry(game.config.breakerWidth - 1, game.config.breakerHeight - 1);
     var material = new THREE.MeshBasicMaterial({ color: game.config.breakerColorInner });
     var cube = new THREE.Mesh(geometry, material);
 
@@ -41,7 +49,7 @@ breakerModel.prototype = function () {
           game.scoreBoard.logHit();
 
           intersected = true;
-          b.cube.visible = false;
+          b.logHit(game);
 
           let halfWidth = (game.config.blockWidth / 2);
           let leftBreakerX = this.cube.position.x - halfWidth;
@@ -81,19 +89,17 @@ breakerModel.prototype = function () {
       }
     }
 
-    if (game.inputHandler.handleIntersection(this.cube, game.leftRail.cube)) {
-      this.angle.x *= -1;
-    }
 
-    if (game.inputHandler.handleIntersection(this.cube, game.rightRail.cube)) {
-      this.angle.x *= -1;
-    }
-
-    if (game.inputHandler.handleIntersection(this.cube, game.topRail.cube)) {
-      this.angle.y *= -1;
-    }
 
     let tempPostion = this.cube.position.clone();
+
+    if (tempPostion.x < game.config.leftBound + game.config.breakerWidth / 2 || tempPostion.x > game.config.rightBound - game.config.breakerWidth / 2) {
+      this.angle.x *= -1;
+    }
+
+    if (tempPostion.y > game.config.railSpaceHeight - game.config.breakerWidth / 2) {
+      this.angle.y *= -1;
+    }
 
     tempPostion = tempPostion.add(this.angle)
 

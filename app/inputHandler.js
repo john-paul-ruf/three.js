@@ -1,9 +1,6 @@
-var inputHandler = function () {
+var inputHandler = function () { };
 
-};
-
-inputHandler.prototype = function () {
-
+inputHandler.prototype = (function () {
   var handleInput = function (e, game) {
     switch (e.which) {
       case 37:
@@ -16,10 +13,10 @@ inputHandler.prototype = function () {
         game.paddle.paddleSpeed = 0;
         break;
     }
-  }
+  };
 
   var handleIntersection = function (targetObject, intersectorObject, visible) {
-    if (targetObject.visible) {
+    if (intersectorObject.visible && targetObject.visible) {
       var target = new THREE.Box3().setFromObject(targetObject);
       var intersector = new THREE.Box3().setFromObject(intersectorObject);
       if (target.intersectsBox(intersector)) {
@@ -28,10 +25,10 @@ inputHandler.prototype = function () {
     }
 
     return false;
-  }
+  };
 
   return {
     handleInput: handleInput,
     handleIntersection: handleIntersection
   };
-}();
+})();
